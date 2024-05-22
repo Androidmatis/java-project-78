@@ -36,4 +36,34 @@ public class TestValidator {
         var schema1 = v.string();
         schema1.minLength(10).minLength(4).isValid("Hexlet"); // true
     }
+
+    @Test
+    public void testNumberSchema() throws Exception {
+        var v = new Validator();
+
+        var schema = v.number();
+
+        assertTrue(schema.isValid(5));
+
+        // Пока не вызван метод required(), null считается валидным
+        assertTrue(schema.isValid(null));
+        assertTrue(schema.positive().isValid(null));
+
+        schema.required();
+
+        assertFalse(schema.isValid(null));
+        assertTrue(schema.isValid(10));
+
+        // Потому что ранее мы вызвали метод positive()
+        assertFalse(schema.isValid(-10));
+        //  Ноль — не положительное число
+        assertFalse(schema.isValid(0));
+
+        schema.range(5, 10);
+
+        assertTrue(schema.isValid(5));
+        assertTrue(schema.isValid(10));
+        assertFalse(schema.isValid(4));
+        assertFalse(schema.isValid(11));
+    }
 }

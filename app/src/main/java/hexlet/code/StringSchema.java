@@ -1,20 +1,19 @@
 package hexlet.code;
 
-public class StringSchema {
-
-    private Boolean isRequired;
+public class StringSchema extends BaseSchema<String> {
     private String subString;
     private Integer length;
 
-    public StringSchema required() {
-        this.isRequired = true;
-        return  this;
+    public StringSchema() {
+        addPredicate(str -> requiredPredicate(str));
+        addPredicate(str -> containsPredicate(str));
+        addPredicate(str -> minLengthPredicate(str));
     }
 
-    private boolean getIsRequired(String element) {
-        if (!(isRequired == null)) {
+    private boolean requiredPredicate(String element) {
+        if (!(getIsRequired() == null)) {
             if (element == null || element.isEmpty()) {
-                return  false;
+                return false;
             }
         }
         return true;
@@ -22,10 +21,10 @@ public class StringSchema {
 
     public StringSchema contains(String element) {
         this.subString = element.toString();
-        return  this;
+        return this;
     }
 
-    private boolean getContains(String element) {
+    private boolean containsPredicate(String element) {
         if (!(subString == null)) {
             if (!element.contains(subString) && !subString.isEmpty()) {
                 return false;
@@ -36,29 +35,15 @@ public class StringSchema {
 
     public StringSchema minLength(int number) {
         this.length = number;
-        return  this;
+        return this;
     }
 
-    private boolean getMinLength(String element) {
+    private boolean minLengthPredicate(String element) {
         if (!(length == null)) {
-            if (!(subString == null ||subString.isEmpty()) && !element.contains(subString)) {
+            if (!(subString == null || subString.isEmpty()) && !element.contains(subString)) {
                 return false;
             }
         }
-        return true;
-    }
-
-    public boolean isValid(String element) {
-        if (!getIsRequired(element)) {
-            return false;
-        }
-        if (!getContains(element)) {
-            return false;
-        }
-        if (!getMinLength(element)) {
-            return false;
-        }
-
         return true;
     }
 
